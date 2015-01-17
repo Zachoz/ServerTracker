@@ -1,0 +1,29 @@
+<config>
+    <general>
+        <queryInterval>30</queryInterval>
+        <sendBackOnlineAlert>true</sendBackOnlineAlert>
+    </general>
+    <twilio>
+        <sid>AC6ea710fee11a454536597w3678gfgf</sid>
+        <authId>454873tr684t8fb4vf4874944</authId>
+        <fromPhoneNumber>+10000000000</fromPhoneNumber>
+        <toPhoneNumber>+61000000000</toPhoneNumber>
+    </twilio>
+    <servers>
+        <server>
+            <name>Website</name>
+            <hostname>example.com</hostname>
+            <port>80</port>
+        </server>
+        <server>
+            <name>Minecraft Server</name>
+            <hostname>mc.example.com</hostname>
+            <port>25565</port>
+        </server>
+        <server>
+            <name>VPS</name>
+            <hostname>vps.example.com</hostname>
+            <port>22</port>
+        </server>
+    </servers>
+</config>
