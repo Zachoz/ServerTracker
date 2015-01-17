@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 
 public class Server {
 
     private String name;
     private String hostname;
     private int port;
+    private ArrayList<String> phoneNumbers = new ArrayList<String>();
 
     public Server(String name, String hostname, int port) {
         this.name = name;
@@ -27,6 +29,10 @@ public class Server {
 
     public int getPort() {
         return this.port;
+    }
+
+    public ArrayList<String> getPhoneNumbers() {
+        return this.phoneNumbers;
     }
 
     public boolean query() {

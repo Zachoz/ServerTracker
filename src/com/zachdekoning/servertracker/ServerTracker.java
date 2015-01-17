@@ -5,6 +5,7 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Timer;
@@ -18,7 +19,6 @@ import java.util.Timer;
  */
 public class ServerTracker {
 
-    static String toPhoneNumber;
     private static HashMap<String, Server> servers = new HashMap<String, Server>();
     private static HashMap<String, Server> offlineServers = new HashMap<String, Server>();
     static Timer queryCheckTimer = new Timer();
@@ -48,8 +48,6 @@ public class ServerTracker {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        System.out.println(queryInverval);
 
         queryCheckTimer.scheduleAtFixedRate(new ServerQueryCheck(), queryInverval * 1000, queryInverval * 1000);
 
@@ -107,7 +105,6 @@ public class ServerTracker {
             TwilioUtils.ACCOUNT_SID = twilioSettings.getChildText("sid");
             TwilioUtils.AUTH_TOKEN = twilioSettings.getChildText("authId");
             TwilioUtils.PHONE_NUMBER_FROM = twilioSettings.getChildText("fromPhoneNumber");
-            toPhoneNumber = twilioSettings.getChildText("toPhoneNumber");
 
             // Get Servers
             Element elementServers = (Element) document.getRootElement().getChildren("servers").get(0);
@@ -117,7 +114,16 @@ public class ServerTracker {
                 String hostname = element.getChildText("hostname");
                 int port = Integer.parseInt(element.getChildText("port"));
 
-                servers.put(name, new Server(name, hostname, port));
+                // Phone numbers to send the alerts to
+                ArrayList<String> numbers = new ArrayList<String>();
+                Element sendTo = (Element) element.getChildren("sendAlertTo").get(0);
+                for (Object number : sendTo.getChildren("phoneNumber")) {
+                    numbers.add(((Element) number).getValue());
+                }
+
+                Server server = new Server(name, hostname, port);
+                server.getPhoneNumbers().addAll(numbers);
+                servers.put(name, server);
             }
         }
     }

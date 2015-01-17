@@ -14,16 +14,26 @@
             <name>Website</name>
             <hostname>example.com</hostname>
             <port>80</port>
+            <sendAlertTo>
+                <phoneNumber>+61000000000</phoneNumber>
+                <phoneNumber>+61000000000</phoneNumber>
+            </sendAlertTo>
         </server>
         <server>
             <name>Minecraft Server</name>
             <hostname>mc.example.com</hostname>
             <port>25565</port>
+            <sendAlertTo>
+                <phoneNumber>+61000000000</phoneNumber>
+            </sendAlertTo>
         </server>
         <server>
             <name>VPS</name>
             <hostname>vps.example.com</hostname>
             <port>22</port>
+            <sendAlertTo>
+                <phoneNumber>+61000000000</phoneNumber>
+            </sendAlertTo>
         </server>
     </servers>
 </config>

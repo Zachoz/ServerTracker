@@ -23,9 +23,11 @@ public class ServerQueryCheck extends TimerTask {
                 if (!ServerTracker.getOfflineServers().containsKey(server.getName())) {
                     ServerTracker.getOfflineServers().put(server.getName(), server);
 
-                    boolean sent = false;
-                    while (!sent) { // Retry until the SMS successfully sends
-                        sent = TwilioUtils.sendSMS(ServerTracker.toPhoneNumber, server.getName() + " is currently offline!");
+                    for (String phoneNumber : server.getPhoneNumbers()) {
+                        boolean sent = false;
+                        while (!sent) { // Retry until the SMS successfully sends
+                            sent = TwilioUtils.sendSMS(phoneNumber, server.getName() + " is currently offline!");
+                        }
                     }
                 }
 
@@ -34,9 +36,11 @@ public class ServerQueryCheck extends TimerTask {
                 if (ServerTracker.getOfflineServers().containsKey(server.getName())) {
                     ServerTracker.getOfflineServers().remove(server.getName());
                     if (ServerTracker.sendBackOnlineAlert) {
-                        boolean sent = false;
-                        while (!sent) { // Retry until the SMS successfully sends
-                            sent = TwilioUtils.sendSMS(ServerTracker.toPhoneNumber, server.getName() + " is now back online!");
+                        for (String phoneNumber : server.getPhoneNumbers()) {
+                            boolean sent = false;
+                            while (!sent) { // Retry until the SMS successfully sends
+                                sent = TwilioUtils.sendSMS(phoneNumber, server.getName() + " is now back online!");
+                            }
                         }
                     }
                 }
