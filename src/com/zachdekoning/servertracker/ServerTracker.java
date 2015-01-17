@@ -22,7 +22,7 @@ public class ServerTracker {
     private static HashMap<String, Server> servers = new HashMap<String, Server>();
     private static HashMap<String, Server> offlineServers = new HashMap<String, Server>();
     static Timer queryCheckTimer = new Timer();
-    static int queryInverval = 30;
+    static int queryInverval = 30, queryTimeOut = 6000;
     public static boolean sendBackOnlineAlert = true;
 
     static String configFileLocation = "config.xml"; //relative
@@ -47,6 +47,9 @@ public class ServerTracker {
             loadConfiguration();
         } catch (Exception ex) {
             ex.printStackTrace();
+            System.err.println("An error occured while loading configuration! Make sure it includes all settings included" +
+                    " in the default config and that data types are correct.");
+            System.exit(0);
         }
 
         queryCheckTimer.scheduleAtFixedRate(new ServerQueryCheck(), queryInverval * 1000, queryInverval * 1000);
@@ -99,6 +102,7 @@ public class ServerTracker {
             Element generalSettings = (Element) document.getRootElement().getChildren("general").get(0);
             queryInverval = Integer.parseInt(generalSettings.getChildText("queryInterval"));
             sendBackOnlineAlert = Boolean.parseBoolean(generalSettings.getChildText("sendBackOnlineAlert"));
+            queryTimeOut = Integer.parseInt(generalSettings.getChildText("queryTimeOut"));
 
             // Get twilio settings
             Element twilioSettings = (Element) document.getRootElement().getChildren("twilio").get(0);
@@ -116,7 +120,8 @@ public class ServerTracker {
 
                 // Set the service type
                 ServiceType type = ServiceType.TCP;
-                if (element.getChildText("type").equalsIgnoreCase("minecraft")) type = ServiceType.MINECRAFT;
+                if (element.getChildText("type") != null && element.getChildText("type").equalsIgnoreCase("minecraft"))
+                    type = ServiceType.MINECRAFT;
 
                 // Phone numbers to send the alerts to
                 ArrayList<String> numbers = new ArrayList<String>();

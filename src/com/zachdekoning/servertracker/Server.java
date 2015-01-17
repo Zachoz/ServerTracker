@@ -57,7 +57,7 @@ public class Server {
             Socket s = new Socket();
             s.setReuseAddress(true);
             SocketAddress sa = new InetSocketAddress(this.hostname, this.port);
-            s.connect(sa, 3000);
+            s.connect(sa, ServerTracker.queryTimeOut);
             s.close();
         } catch (IOException e) {
             online = false;

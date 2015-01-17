@@ -2,6 +2,7 @@
     <general>
         <queryInterval>30</queryInterval>
         <sendBackOnlineAlert>true</sendBackOnlineAlert>
+        <queryTimeOut>6000</queryTimeOut>
     </general>
     <twilio>
         <sid>AC6ea710fee11a454536597w3678gfgf</sid>
