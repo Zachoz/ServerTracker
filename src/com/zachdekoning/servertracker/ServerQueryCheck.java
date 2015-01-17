@@ -6,7 +6,10 @@ import java.util.TimerTask;
 public class ServerQueryCheck extends TimerTask {
 
     public void run() {
+        long startTime, finishTime;
+
         System.out.println("Starting server query...");
+        startTime = System.currentTimeMillis();
 
         // Task timeout - timeout after 2 minutes, incase of retrying texts
         new Timer().schedule(new TimerTask() {
@@ -47,7 +50,9 @@ public class ServerQueryCheck extends TimerTask {
             }
         }
 
-        System.out.println("Server query complete");
+        finishTime = System.currentTimeMillis();
+        System.out.println("Server query complete! Took " + ((finishTime - startTime) / 1000.0) + " seconds");
+
 
     }
 
