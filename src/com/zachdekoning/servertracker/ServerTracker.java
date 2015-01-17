@@ -114,6 +114,10 @@ public class ServerTracker {
                 String hostname = element.getChildText("hostname");
                 int port = Integer.parseInt(element.getChildText("port"));
 
+                // Set the service type
+                ServiceType type = ServiceType.TCP;
+                if (element.getChildText("type").equalsIgnoreCase("minecraft")) type = ServiceType.MINECRAFT;
+
                 // Phone numbers to send the alerts to
                 ArrayList<String> numbers = new ArrayList<String>();
                 Element sendTo = (Element) element.getChildren("sendAlertTo").get(0);
@@ -121,7 +125,7 @@ public class ServerTracker {
                     numbers.add(((Element) number).getValue());
                 }
 
-                Server server = new Server(name, hostname, port);
+                Server server = new Server(name, hostname, port, type);
                 server.getPhoneNumbers().addAll(numbers);
                 servers.put(name, server);
             }

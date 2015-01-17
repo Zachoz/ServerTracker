@@ -1,5 +1,9 @@
 package com.zachdekoning.servertracker;
 
+import com.zachdekoning.servertracker.mcping.mcping.MinecraftPing;
+import com.zachdekoning.servertracker.mcping.mcping.MinecraftPingOptions;
+import com.zachdekoning.servertracker.mcping.mcping.MinecraftPingReply;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -12,11 +16,13 @@ public class Server {
     private String hostname;
     private int port;
     private ArrayList<String> phoneNumbers = new ArrayList<String>();
+    private ServiceType serviceType = ServiceType.TCP;
 
-    public Server(String name, String hostname, int port) {
+    public Server(String name, String hostname, int port, ServiceType serviceType) {
         this.name = name;
         this.hostname = hostname;
         this.port = port;
+        this.serviceType = serviceType;
     }
 
     public String getName() {
@@ -35,7 +41,16 @@ public class Server {
         return this.phoneNumbers;
     }
 
+    public ServiceType getServiceType() {
+        return this.serviceType;
+    }
+
     public boolean query() {
+        if (getServiceType() == ServiceType.MINECRAFT) return minecraftPing();
+        return tcpPing();
+    }
+
+    private boolean tcpPing() {
         boolean online = true;
 
         try {
@@ -45,6 +60,21 @@ public class Server {
             s.connect(sa, 3000);
             s.close();
         } catch (IOException e) {
+            online = false;
+        }
+
+        return online;
+    }
+
+    private boolean minecraftPing() {
+        boolean online = true;
+
+        try {
+            MinecraftPingOptions options = new MinecraftPingOptions();
+            options.setHostname(this.hostname);
+            options.setPort(this.port);
+            MinecraftPingReply ping = new MinecraftPing().getPing(options);
+        } catch (Exception ex) {
             online = false;
         }
 

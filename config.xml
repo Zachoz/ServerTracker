@@ -23,6 +23,7 @@
             <name>Minecraft Server</name>
             <hostname>mc.example.com</hostname>
             <port>25565</port>
+            <type>minecraft</type>
             <sendAlertTo>
                 <phoneNumber>+61000000000</phoneNumber>
             </sendAlertTo>
