@@ -28,6 +28,8 @@
  */
 package com.zachdekoning.servertracker.mcping.mcping;
 
+import com.zachdekoning.servertracker.ServerTracker;
+
 /**
  * Storage class for {@link MinecraftPing} options.
  */
@@ -35,7 +37,7 @@ public class MinecraftPingOptions {
 
     private String hostname;
     private int port = 25565;
-    private int timeout = 2000;
+    private int timeout = ServerTracker.queryTimeOut;
     private String charset = "UTF-8";
 
     public MinecraftPingOptions setHostname(String hostname) {

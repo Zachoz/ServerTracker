@@ -22,7 +22,7 @@ public class ServerTracker {
     private static HashMap<String, Server> servers = new HashMap<String, Server>();
     private static HashMap<String, Server> offlineServers = new HashMap<String, Server>();
     static Timer queryCheckTimer = new Timer();
-    static int queryInverval = 30, queryTimeOut = 6000;
+    public static int queryInverval = 30, queryTimeOut = 6000;
     public static boolean sendBackOnlineAlert = true;
 
     static String configFileLocation = "config.xml"; //relative
