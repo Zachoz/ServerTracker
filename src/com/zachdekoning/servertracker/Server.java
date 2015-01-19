@@ -51,14 +51,17 @@ public class Server {
     }
 
     private boolean tcpPing() {
-        boolean online = true;
+        boolean online = false;
 
         try {
             Socket s = new Socket();
             s.setReuseAddress(true);
             SocketAddress sa = new InetSocketAddress(this.hostname, this.port);
             s.connect(sa, ServerTracker.queryTimeOut);
-            s.close();
+            if (s.isConnected()) {
+                s.close();
+                online = true;
+            }
         } catch (IOException e) {
             online = false;
         }
