@@ -114,7 +114,7 @@ Scroll to the bottom of this code snippet for information on http page monitorin
 ####Monitoring a http page
 Unlike the other checks, this check will scan the web page for unexpected content within the page. For example, you could add a check that looks for the string "Error 404", if this was found on the page (or anywhere in the html, including the title, other tags, etc), you would be alerted.
 A http check is configured similar to any other server, extra parametres are:
-* **hostname:** Like other services, but instead put the URL of the page
+* **hostname:** Like other services, but instead put the URL of the page. (Please put your direct url here, services such as cloudflare may interfere with the checks)
 * **triggerAlertForBlankPage:** whether or not to treat a completely blank page as downtime
 * **unexpectedContent:** a list of unexpected strings that will trigger a downtime event
 * **content:** the string that if found on the webpage will trigger a downtime event
