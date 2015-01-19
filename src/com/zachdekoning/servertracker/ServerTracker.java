@@ -82,10 +82,7 @@ public class ServerTracker {
         SAXBuilder builder = new SAXBuilder();
         Document document;
 
-        ///Users/zach_de_koning/javaprojects/ServerTracker/config.xml
-
         FileInputStream fileStream = new FileInputStream("config.xml");
-
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream));
 
         final StringBuilder stringBuilder = new StringBuilder();
@@ -120,8 +117,26 @@ public class ServerTracker {
 
                 // Set the service type
                 ServiceType type = ServiceType.TCP;
+
                 if (element.getChildText("type") != null && element.getChildText("type").equalsIgnoreCase("minecraft"))
                     type = ServiceType.MINECRAFT;
+
+                if (element.getChildText("type") != null && element.getChildText("type").equalsIgnoreCase("http"))
+                    type = ServiceType.HTTP;
+
+                // Get the unexpected content strings
+                ArrayList<String> unexpectedContent = new ArrayList<String>();
+                if (type == ServiceType.HTTP) {
+                    // Unexpected strings in the check
+                    Element unexpected = (Element) element.getChildren("unexpectedContent").get(0);
+                    for (Object content : unexpected.getChildren("content")) {
+                        unexpectedContent.add(((Element) content).getValue());
+                    }
+
+                    if (element.getChildText("triggerAlertForBlankPage") != null &&
+                            element.getChildText("triggerAlertForBlankPage").equalsIgnoreCase("true"))
+                        unexpectedContent.add("triggerAlertForBlankPage");
+                }
 
                 // Phone numbers to send the alerts to
                 ArrayList<String> numbers = new ArrayList<String>();
@@ -131,7 +146,10 @@ public class ServerTracker {
                 }
 
                 Server server = new Server(name, hostname, port, type);
+
                 server.getPhoneNumbers().addAll(numbers);
+                server.getUnexpectedContent().addAll(unexpectedContent);
+
                 servers.put(name, server);
             }
         }

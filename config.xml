@@ -36,5 +36,18 @@
                 <phoneNumber>+61000000000</phoneNumber>
             </sendAlertTo>
         </server>
+        <server>
+            <name>Forums</name>
+            <hostname>http://example.com/forums/</hostname>
+            <port>80</port>
+            <type>http</type>
+            <triggerAlertForBlankPage>true</triggerAlertForBlankPage>
+            <unexpectedContent>
+                <content>An unexpected database error occurred. Please try again later.</content>
+            </unexpectedContent>
+            <sendAlertTo>
+                <phoneNumber>+61000000000</phoneNumber>
+            </sendAlertTo>
+        </server>
     </servers>
 </config>

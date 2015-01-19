@@ -57,13 +57,15 @@ Servers settings are pretty self explanatory:
 * **name:** The name of the server/service, this is what will be shown in the SMS
 * **hostname:** the hostname or IP address of the server or service
 * **port:** the port of the server or service
-* **type:** optional, currently allows you to define it's a minecraft server
+* **type:** optional, currently allows you to define it's a minecraft server or a http page
 * **sendAlertTo:** list of phone numbers to send the sms alert to
 * **phoneNumber:** a phone number to send the sms alert to
 
 You may test multiple ports for different services on the same hostname. You may also add as many services inbetween the servers tag as you wish
 
 Each server can send the downtime alert to a different phone number. This way you can alert certain sysadmins of the downtime of a specific service
+
+Scroll to the bottom of this code snippet for information on http page monitoring
 
 ```xml
 <servers>
@@ -93,7 +95,44 @@ Each server can send the downtime alert to a different phone number. This way yo
             <phoneNumber>+61000000000</phoneNumber>
         </sendAlertTo>
     </server>
+    <server>
+        <name>Forums</name>
+        <hostname>http://example.com/forums/</hostname>
+        <port>80</port>
+        <type>http</type>
+        <triggerAlertForBlankPage>true</triggerAlertForBlankPage>
+        <unexpectedContent>
+            <content>An unexpected database error occurred. Please try again later.</content>
+        </unexpectedContent>
+        <sendAlertTo>
+            <phoneNumber>+61000000000</phoneNumber>
+        </sendAlertTo>
+    </server>
 <servers>
+```
+
+####Monitoring a http page
+Unlike the other checks, this check will scan the web page for unexpected content within the page. For example, you could add a check that looks for the string "Error 404", if this was found on the page (or anywhere in the html, including the title, other tags, etc), you would be alerted.
+A http check is configured similar to any other server, extra parametres are:
+* **hostname:** Like other services, but instead put the URL of the page
+* **triggerAlertForBlankPage:** whether or not to treat a completely blank page as downtime
+* **unexpectedContent:** a list of unexpected strings that will trigger a downtime event
+* **content:** the string that if found on the webpage will trigger a downtime event
+
+```xml
+<server>
+    <name>Forums</name>
+    <hostname>http://example.com/forums/</hostname>
+    <port>80</port>
+    <type>http</type>
+    <triggerAlertForBlankPage>true</triggerAlertForBlankPage>
+    <unexpectedContent>
+        <content>An unexpected database error occurred. Please try again later.</content>
+    </unexpectedContent>
+    <sendAlertTo>
+        <phoneNumber>+61000000000</phoneNumber>
+    </sendAlertTo>
+</server>
 ```
 
 ###Notes:

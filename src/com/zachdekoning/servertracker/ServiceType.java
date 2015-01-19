@@ -2,6 +2,6 @@ package com.zachdekoning.servertracker;
 
 public enum ServiceType {
 
-    TCP, MINECRAFT
+    TCP, MINECRAFT, HTTP
 
 }

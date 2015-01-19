@@ -3,11 +3,11 @@ package com.zachdekoning.servertracker;
 import com.zachdekoning.servertracker.mcping.mcping.MinecraftPing;
 import com.zachdekoning.servertracker.mcping.mcping.MinecraftPingOptions;
 import com.zachdekoning.servertracker.mcping.mcping.MinecraftPingReply;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
+import java.io.InputStream;
+import java.net.*;
 import java.util.ArrayList;
 
 public class Server {
@@ -17,6 +17,7 @@ public class Server {
     private int port;
     private ArrayList<String> phoneNumbers = new ArrayList<String>();
     private ServiceType serviceType = ServiceType.TCP;
+    private ArrayList<String> unexpectedContent = new ArrayList<String>();
 
     public Server(String name, String hostname, int port, ServiceType serviceType) {
         this.name = name;
@@ -45,8 +46,13 @@ public class Server {
         return this.serviceType;
     }
 
+    public ArrayList<String> getUnexpectedContent() {
+        return this.unexpectedContent;
+    }
+
     public boolean query() {
         if (getServiceType() == ServiceType.MINECRAFT) return minecraftPing();
+        if (getServiceType() == ServiceType.HTTP) return httpQuery();
         return tcpPing();
     }
 
@@ -82,6 +88,31 @@ public class Server {
         }
 
         return online;
+    }
+
+    private boolean httpQuery() {
+        try {
+            URL url = new URL(this.getHost());
+            URLConnection con = url.openConnection();
+            InputStream in = con.getInputStream();
+            String encoding = con.getContentEncoding();
+            encoding = encoding == null ? "UTF-8" : encoding;
+            String body = IOUtils.toString(in, encoding);
+
+            if (this.unexpectedContent.contains("triggerAlertForBlankPage") && body.equals(""))
+                return false;
+
+            for (String unexpectedOutput : this.unexpectedContent) {
+                if (body.contains(unexpectedOutput)) {
+                    return false;
+                }
+            }
+
+        } catch (IOException ex) {
+            return false;
+        }
+
+        return true;
     }
 
 }
