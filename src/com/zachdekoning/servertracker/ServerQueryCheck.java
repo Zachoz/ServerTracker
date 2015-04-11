@@ -23,7 +23,18 @@ public class ServerQueryCheck extends TimerTask {
         for (Server server : ServerTracker.getServers().values()) {
             // If server is offline
             if (!server.query()) {
-                if (!ServerTracker.getOfflineServers().containsKey(server.getName())) {
+
+                // Query it again, to prevent false positives
+                System.out.println("Server " + server.getName() + " failed to respond to query. Retrying.");
+                try {
+                    Thread.sleep(5000); // Sleep for 5 seconds before querying again
+                } catch (InterruptedException ex) {
+                    // Yolo
+                }
+
+                boolean retry = server.query(); // Retry query
+
+                if (!retry && !ServerTracker.getOfflineServers().containsKey(server.getName())) {
                     ServerTracker.getOfflineServers().put(server.getName(), server);
 
                     for (String phoneNumber : server.getPhoneNumbers()) {
@@ -52,7 +63,6 @@ public class ServerQueryCheck extends TimerTask {
 
         finishTime = System.currentTimeMillis();
         System.out.println("Server query complete! Took " + ((finishTime - startTime) / 1000.0) + " seconds");
-
 
     }
 
